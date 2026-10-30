@@ -1,0 +1,5 @@
+lib/.env
+
+.env
+.env.*
+!.env.example

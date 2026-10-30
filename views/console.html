@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WordPress Plugin Creator — Free AI Plugins, Stored for You</title>
+  <meta name="description" content="Describe a plugin in plain English. We generate a real, installable WordPress plugin for free and keep it in your library so you can download it anytime.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070a12;
+      --bg-elevated: #0d1220;
+      --card: #12182a;
+      --card-hover: #161e34;
+      --border: #1e2a45;
+      --border-soft: #182238;
+      --primary: #21759b;
+      --primary-bright: #3b9bc7;
+      --primary-glow: rgba(33, 117, 155, 0.35);
+      --accent: #46b450;
+      --accent-soft: rgba(70, 180, 80, 0.12);
+      --warn: #dba617;
+      --warn-soft: rgba(219, 166, 23, 0.12);
+      --danger: #e35d5d;
+      --danger-soft: rgba(227, 93, 93, 0.12);
+      --info: #5b8def;
+      --info-soft: rgba(91, 141, 239, 0.12);
+      --text: #f0f4fc;
+      --text-muted: #8b9bb8;
+      --text-dim: #5c6b88;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(33, 117, 155, 0.18), transparent 55%),
+        radial-gradient(900px 500px at 90% 0%, rgba(70, 180, 80, 0.08), transparent 50%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+    a { color: var(--primary-bright); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { max-width: 920px; margin: 0 auto; padding: 1.25rem 1.25rem 3rem; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap;
+      padding: 0.75rem 0 1.5rem;
+      border-bottom: 1px solid var(--border-soft);
+      margin-bottom: 2rem;
+    }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-mark {
+      width: 40px; height: 40px; border-radius: 11px;
+      background: linear-gradient(145deg, #21759b 0%, #0e4a66 100%);
+      display: grid; place-items: center;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 24px var(--primary-glow);
+      font-weight: 700; font-size: 0.95rem; letter-spacing: -0.02em;
+    }
+    .brand-text { display: flex; flex-direction: column; gap: 0.05rem; }
+    .brand-name { font-weight: 700; font-size: 1.05rem; letter-spacing: -0.02em; }
+    .brand-tag { font-size: 0.75rem; color: var(--text-muted); }
+    .top-meta {
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+      font-size: 0.85rem; color: var(--text-muted);
+    }
+    .pill {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      background: var(--card); border: 1px solid var(--border);
+      padding: 0.35rem 0.7rem; border-radius: 999px;
+      font-size: 0.78rem; color: var(--text-muted);
+    }
+    .pill strong { color: var(--text); font-weight: 600; }
+    .top-meta a { color: var(--text-muted); }
+    .top-meta a:hover { color: var(--text); text-decoration: none; }
+    .hero { text-align: center; margin-bottom: 2rem; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--accent-soft); color: var(--accent);
+      border: 1px solid rgba(70, 180, 80, 0.25);
+      padding: 0.35rem 0.85rem; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 4vw, 2.45rem);
+      font-weight: 700; letter-spacing: -0.035em;
+      line-height: 1.15; margin-bottom: 0.75rem;
+    }
+    .hero h1 span {
+      background: linear-gradient(90deg, #5bb8e0, #46b450);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero p {
+      color: var(--text-muted); font-size: 1.05rem;
+      max-width: 540px; margin: 0 auto 1.25rem;
+    }
+    .feature-row {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem;
+      margin-bottom: 0.25rem;
+    }
+    .feature {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      padding: 0.45rem 0.85rem; border-radius: 999px;
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+    .feature svg { width: 14px; height: 14px; color: var(--accent); flex-shrink: 0; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem 1.4rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+    .card-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--text-dim); margin-bottom: 0.65rem;
+    }
+    textarea {
+      width: 100%; min-height: 130px;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1rem 1.1rem;
+      color: var(--text); font-family: inherit; font-size: 0.98rem;
+      resize: vertical; line-height: 1.5; margin-bottom: 1rem;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    textarea::placeholder { color: var(--text-dim); }
+    textarea:focus {
+      outline: none; border-color: var(--primary-bright);
+      box-shadow: 0 0 0 3px var(--primary-glow);
+    }
+    textarea:disabled { opacity: 0.55; cursor: not-allowed; }
+    .btn-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem;
+      font-family: inherit; font-weight: 600; font-size: 0.95rem;
+      border: none; border-radius: var(--radius-sm);
+      padding: 0.8rem 1.35rem; cursor: pointer;
+      transition: transform 0.12s, background 0.15s, box-shadow 0.15s, opacity 0.15s;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+    .btn-primary {
+      background: linear-gradient(180deg, #2a8bb5 0%, #1a6a8c 100%);
+      color: #fff;
+      box-shadow: 0 4px 16px var(--primary-glow), inset 0 1px 0 rgba(255,255,255,0.15);
+      flex: 1; min-width: 180px;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: linear-gradient(180deg, #3499c4 0%, #21759b 100%);
+    }
+    .msg {
+      font-size: 0.88rem; margin-top: 0.85rem; min-height: 1.3em;
+      color: var(--text-muted);
+    }
+    .msg.ok { color: var(--accent); }
+    .msg.err { color: var(--danger); }
+    .keybox {
+      border: 1px solid var(--border); background: var(--bg-elevated);
+      border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.25rem;
+    }
+    .keybox label { font-size: 0.82rem; font-weight: 600; color: var(--text-muted); }
+    .keybox input {
+      width: 100%; margin: 0.5rem 0; padding: 0.7rem 0.85rem;
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+    }
+    .keybox input:focus { outline: none; border-color: var(--primary-bright); }
+    .keybox .hint { font-size: 0.78rem; color: var(--text-dim); margin-top: 0.4rem; }
+    .section-head {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;
+    }
+    .section-head h2 {
+      font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em;
+    }
+    .section-head p { font-size: 0.85rem; color: var(--text-muted); }
+    .builds-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+    .build-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 1.1rem 1.2rem;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .build-item:hover { border-color: #2a3a5c; background: var(--card-hover); }
+    .build-top {
+      display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.55rem;
+    }
+    .badge {
+      flex-shrink: 0; font-size: 0.68rem; font-weight: 700;
+      padding: 0.25rem 0.55rem; border-radius: 6px;
+      text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .badge-complete, .badge-ready { background: var(--accent-soft); color: var(--accent); }
+    .badge-queued { background: var(--warn-soft); color: var(--warn); }
+    .badge-running { background: var(--info-soft); color: var(--info); }
+    .badge-failed { background: var(--danger-soft); color: var(--danger); }
+    .badge-deleted { background: rgba(140,140,140,0.12); color: #999; }
+    .build-desc {
+      font-weight: 560; font-size: 0.98rem; color: var(--text);
+      line-height: 1.4; word-break: break-word;
+    }
+    .build-meta {
+      font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .build-error {
+      font-size: 0.82rem; color: var(--danger); margin-bottom: 0.55rem;
+      background: var(--danger-soft); padding: 0.45rem 0.65rem; border-radius: 8px;
+    }
+    .build-actions {
+      display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;
+    }
+    .action {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      font-size: 0.82rem; font-weight: 600;
+      padding: 0.4rem 0.75rem; border-radius: 8px;
+      border: 1px solid var(--border); background: var(--bg-elevated);
+      color: var(--text-muted); cursor: pointer;
+      text-decoration: none; transition: color 0.12s, border-color 0.12s, background 0.12s;
+    }
+    .action:hover { color: var(--text); border-color: var(--text-dim); text-decoration: none; }
+    .action-primary {
+      background: rgba(33, 117, 155, 0.18); border-color: rgba(33, 117, 155, 0.45);
+      color: var(--primary-bright);
+    }
+    .action-primary:hover { background: rgba(33, 117, 155, 0.28); color: #7ec8e8; }
+    .action-danger:hover { color: var(--danger); border-color: rgba(227,93,93,0.4); }
+    .empty-state {
+      text-align: center; padding: 2.5rem 1.5rem;
+      border: 1px dashed var(--border); border-radius: var(--radius);
+      color: var(--text-muted); background: var(--bg-elevated);
+    }
+    .empty-state strong { display: block; color: var(--text); margin-bottom: 0.35rem; font-size: 1rem; }
+    .footer {
+      margin-top: 2.5rem; padding-top: 1.25rem;
+      border-top: 1px solid var(--border-soft);
+      text-align: center; font-size: 0.8rem; color: var(--text-dim);
+    }
+    .footer a { color: var(--text-muted); }
+    #wp-loader {
+      position: fixed; inset: 0; z-index: 9999;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(7, 10, 18, 0.82); pointer-events: none;
+      backdrop-filter: blur(6px);
+    }
+    #wp-loader.active { display: flex; pointer-events: auto; }
+    #wp-loader video { width: min(90vw, 420px); height: auto; max-height: 90vh; object-fit: contain; }
+    @media (max-width: 560px) {
+      .shell { padding: 1rem 0.9rem 2.5rem; }
+      .hero h1 { font-size: 1.65rem; }
+      .card { padding: 1.1rem; }
+      .btn-primary { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div id="wp-loader"></div>
+  <script src="/wp-loader.js" data-src="/wp-logo.webp"></script>
+
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-mark">WP</div>
+        <div class="brand-text">
+          <span class="brand-name">Plugin Creator</span>
+          <span class="brand-tag">by WiredHowse · free</span>
+        </div>
+      </div>
+      <div class="top-meta">
+        <span class="pill">Signed in as <strong>{{USER_EMAIL}}</strong></span>
+        <span class="pill" id="keyStatusPill">{{KEY_STATUS}}</span>
+        <a href="/logout">Sign out</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"/></svg>
+        Free · no credit card
+      </div>
+      <h1>Create WordPress plugins<br><span>from a plain-English description</span></h1>
+      <p>
+        Tell us what the plugin should do. We generate real, installable PHP —
+        validated, zipped, and saved in your library so you can download it whenever you need it.
+      </p>
+      <div class="feature-row">
+        <span class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          AI-generated code
+        </span>
+        <span class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+          Stored in your library
+        </span>
+        <span class="feature">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6M9 13h6M9 17h4"/></svg>
+          Installable .zip
+        </span>
+      </div>
+    </section>
+
+    <div class="keybox" id="keyBox" style="display:none;">
+      <label for="anthropicKeyInput">Your Anthropic API key</label>
+      <input id="anthropicKeyInput" type="password" placeholder="sk-ant-..." autocomplete="off" />
+      <button type="button" class="btn btn-primary" id="saveKeyBtn" style="width:auto; padding:0.55rem 1rem; font-size:0.88rem;">Save key</button>
+      <div class="hint">Stored server-side and never shown again. Builds with your key don’t count against the shared monthly limit. Get a key at console.anthropic.com.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-label">New plugin</div>
+      <textarea id="prompt" placeholder="Example: A plugin that adds a floating ‘back to top’ button on every page, with color and position options in Settings." {{DISABLED}}></textarea>
+      <div class="btn-row">
+        <button id="submit" class="btn btn-primary" {{DISABLED}}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          Create plugin
+        </button>
+      </div>
+      <div class="msg" id="msg">{{DB_MSG}}</div>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <h2>Your plugin library</h2>
+        <p>Everything you create stays here after you sign in. Download the .zip anytime.</p>
+      </div>
+    </div>
+    <ul id="jobs" class="builds-list"></ul>
+
+    <div class="footer">
+      Free WordPress plugin generator · plugins are stored on this service for your account ·
+      ideas or issues? <a href="mailto:{{SUGGESTIONS_EMAIL}}">{{SUGGESTIONS_EMAIL}}</a>
+    </div>
+  </div>
+
+  <script>
+    const MAX_EDITS = {{MAX_EDITS}};
+    const msgEl = document.getElementById('msg');
+    const jobsEl = document.getElementById('jobs');
+    const promptEl = document.getElementById('prompt');
+    const submitEl = document.getElementById('submit');
+
+    document.getElementById('setKeyLink')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('keyBox').style.display = 'block';
+      document.getElementById('anthropicKeyInput')?.focus();
+    });
+    document.getElementById('saveKeyBtn')?.addEventListener('click', async () => {
+      const key = document.getElementById('anthropicKeyInput').value.trim();
+      if (!key) return;
+      try {
+        const res = await fetch('/api/settings/anthropic-key', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ key }),
+        });
+        const data = await res.json();
+        if (!res.ok) { alert(data.error || 'Could not save key.'); return; }
+        location.reload();
+      } catch {
+        alert('Network error while saving key.');
+      }
+    });
+    document.getElementById('clearKeyLink')?.addEventListener('click', async (e) => {
+      e.preventDefault();
+      if (!confirm('Remove your Anthropic API key? Future builds will use the shared key and count against monthly limits.')) return;
+      try {
+        await fetch('/api/settings/anthropic-key', { method: 'DELETE' });
+      } catch {}
+      location.reload();
+    });
+
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    function statusLabel(status) {
+      if (status === 'complete') return 'Ready';
+      if (status === 'running') return 'Building';
+      if (status === 'queued') return 'Queued';
+      if (status === 'failed') return 'Failed';
+      if (status === 'deleted') return 'Deleted';
+      return status;
+    }
+
+    function renderJob(j) {
+      const canManage = j.status === 'complete' || j.status === 'failed';
+      const isPlugin = !j.template_id || j.template_id === 'wp-plugin';
+      let actions = '';
+      if (canManage) {
+        const parts = [];
+        if (j.status === 'complete') {
+          parts.push('<a class="action action-primary" href="/api/builds/' + j.id + '/download">Download .zip</a>');
+        }
+        if (j.status === 'complete' && j.github_repo) {
+          parts.push('<a class="action" href="#" data-access="' + j.id + '">View source</a>');
+        }
+        parts.push('<a class="action action-danger" href="#" data-delete="' + j.id + '">Delete</a>');
+        actions = '<div class="build-actions">' + parts.join('') + '</div>';
+      }
+
+      const when = j.created_at ? new Date(j.created_at).toLocaleString() : '';
+      const meta = [
+        '#' + j.id,
+        when,
+        isPlugin ? 'WordPress plugin' : (j.template_id || '')
+      ].filter(Boolean).join(' · ');
+
+      return '<li class="build-item">' +
+        '<div class="build-top">' +
+          '<span class="badge badge-' + esc(j.status) + '">' + esc(statusLabel(j.status)) + '</span>' +
+          '<span class="build-desc">' + esc(j.prompt) + '</span>' +
+        '</div>' +
+        '<div class="build-meta">' + esc(meta) + '</div>' +
+        (j.error ? '<div class="build-error">' + esc(j.error) + '</div>' : '') +
+        actions +
+      '</li>';
+    }
+
+    async function refresh() {
+      try {
+        const res = await fetch('/api/builds');
+        if (!res.ok) return;
+        const jobs = await res.json();
+        if (!jobs.length) {
+          jobsEl.innerHTML = '<li class="empty-state"><strong>No plugins yet</strong>Describe one above and it will show up here — stored for your account.</li>';
+          return;
+        }
+        jobsEl.innerHTML = jobs.map(renderJob).join('');
+      } catch {}
+    }
+
+    jobsEl?.addEventListener('click', async (e) => {
+      const delId = e.target.closest('[data-delete]')?.getAttribute('data-delete');
+      const accessId = e.target.closest('[data-access]')?.getAttribute('data-access');
+
+      if (delId) {
+        e.preventDefault();
+        if (!confirm('Delete this plugin from your library? The .zip and related source will be removed.')) return;
+        try {
+          const res = await fetch('/api/builds/' + delId, { method: 'DELETE' });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) {
+            alert((data.error || 'Delete failed.') + (data.notes ? '\\n\\n' + data.notes.join('\\n') : ''));
+          }
+        } catch {
+          alert('Network error while deleting.');
+        }
+        refresh();
+      } else if (accessId) {
+        e.preventDefault();
+        const username = prompt('GitHub username to grant read access to the plugin source repo:');
+        if (!username) return;
+        try {
+          const res = await fetch('/api/builds/' + accessId + '/github-access', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ githubUsername: username }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || 'Could not grant access.');
+          } else {
+            alert('Access invited for @' + username + (data.repo ? ' on ' + data.repo : '') + '.');
+          }
+        } catch {
+          alert('Network error.');
+        }
+      }
+    });
+
+    submitEl?.addEventListener('click', async () => {
+      const prompt = (promptEl.value || '').trim();
+      if (!prompt) {
+        msgEl.textContent = 'Describe the plugin you want first.';
+        msgEl.className = 'msg err';
+        promptEl.focus();
+        return;
+      }
+      submitEl.disabled = true;
+      msgEl.textContent = 'Queuing your plugin…';
+      msgEl.className = 'msg';
+      try {
+        const res = await fetch('/api/builds', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, templateId: 'wp-plugin' }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          msgEl.textContent = data.error || 'Could not start build.';
+          msgEl.className = 'msg err';
+        } else {
+          promptEl.value = '';
+          msgEl.textContent = 'Queued. Your plugin will appear in the library when it’s ready (usually under a minute).';
+          msgEl.className = 'msg ok';
+          refresh();
+        }
+      } catch {
+        msgEl.textContent = 'Network error — try again.';
+        msgEl.className = 'msg err';
+      } finally {
+        submitEl.disabled = false;
+      }
+    });
+
+    if ({{DB_READY}}) {
+      refresh();
+      setInterval(refresh, 5000);
+    }
+  </script>
+</body>
+</html>
